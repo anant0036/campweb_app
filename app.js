@@ -13,7 +13,8 @@ var campgroundSchema = new mongoose.Schema
 (
 {
     name:String,
-    image:String
+    image:String,
+    description:String
 }
 );
 
@@ -22,8 +23,9 @@ var Campground = mongoose.model('Campground',campgroundSchema);
 // Campground.create
 // (
 //     {
-//         name: "Granite",
-//         image: "https://i.cbc.ca/1.4184033.1498754066!/fileImage/httpImage/image.jpg_gen/derivatives/16x9_780/lac-philippe-campground-gatineau-park.jpg"
+//         name: "Jellystone Park Larkspur",
+//         image: "https://travel.home.sndimg.com/content/dam/images/travel/fullset/2015/05/15/family-campfire-yogi-bear-jellystone-park-larkspur-colorado.jpg.rend.hgtvcom.966.725.suffix/1491582086955.jpeg",
+//         description:"Families can’t help but love this Yogi Bear-themed campground, which is located midway between Denver and Colorado Springs and offers much more than sites to pitch a tent."
 //     },
 //     function(err,campground)
 //     {
@@ -57,7 +59,7 @@ app.get("/campground",function(req,res)
 
         else
         {
-            res.render("campground",{campgrounds:allCampgrounds});
+            res.render("index",{campgrounds:allCampgrounds});
         }
     }
     );
@@ -68,7 +70,8 @@ app.post("/campground", function(req,res)
 {
     var name = req.body.name;
     var image = req.body.image;
-    var newCampground = {name:name, image:image}
+    var desc = req.body.description;
+    var newCampground = {name:name, image:image ,description:desc}
     Campground.create(newCampground,function(err,newlyCreated)
     {
         if(err)
@@ -92,13 +95,23 @@ app.get("/campground/new",function(req,res)
 }
 );
 
+app.get("/campground/:id" , function(req,res)
+{
+    Campground.findById(req.params.id, function(err,foundCampground)
+    {
+        if(err)
+        {
+            console.log(err);
+        }
 
-
-
-
-
-
-
+        else
+        {
+            res.render("show",{campground:foundCampground});
+        }
+    }
+    );
+}
+);
 
 
 
